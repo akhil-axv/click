@@ -1,86 +1,90 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="kaa">
 <head>
-    <meta charset="UTF-8">
-    <style>
-        body { display: flex; justify-content: center; padding-top: 50px; background: #f0f0f0; }
-        .svetofor-box {
-            width: 80px;
-            padding: 15px;
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            border: solid;
-            border-width: 5px
-        }
-        .btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 1px solid white;
-            cursor: pointer;
-        }
-        .red { background: #0004ff; }
-        .yellow { background: #ffcc00; }
-        .green { background: #cc2e2e; }
-        .input-area { display: none; flex-direction: column; gap: 5px; }
-        input {
-            width: 60px;
-            padding: 4px;
-            font-size: 11px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-        .send-btn {
-            background: #3498db;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 10px;
-            padding: 4px;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A simple interactive traffic-light exercise.">
+  <title>Traffic Light Buttons</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh; margin: 0; padding: 24px;
+      display: grid; place-items: center;
+      background: #f1f4f8; color: #1f2937;
+      font-family: system-ui, sans-serif;
+    }
+    main { width: min(100%, 340px); text-align: center; }
+    h1 { font-size: 1.6rem; margin-bottom: 8px; }
+    .traffic-light {
+      display: grid; gap: 14px; width: 132px; margin: 26px auto;
+      padding: 16px; border-radius: 24px; background: #202733;
+    }
+    .light {
+      width: 84px; height: 84px; margin: auto; border-radius: 50%;
+      border: 3px solid #ffffff35; cursor: pointer;
+      transition: transform .2s, opacity .2s;
+    }
+    .light:hover { transform: scale(1.05); }
+    .red { background: #df4242; }
+    .yellow { background: #f0c23c; }
+    .green { background: #2eaa69; }
+    .input-area { display: none; gap: 8px; margin-top: 8px; }
+    .input-area input { width: 100%; min-width: 0; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; }
+    .send-btn { padding: 9px 12px; border: 0; border-radius: 8px; background: #2457c5; color: white; cursor: pointer; }
+    .item { display: grid; justify-items: center; }
+    button:focus-visible, input:focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
+    #status { color: #667085; min-height: 1.5em; }
+  </style>
 </head>
 <body>
-
-<div class="svetofor-box">
-    <div id="item1">
-        <button id="btn1" class="btn red" onclick="toggle(1)"></button>
+  <main>
+    <h1>Traffic Light</h1>
+    <p id="status" role="status" aria-live="polite">Choose a light to add a note.</p>
+    <div class="traffic-light" role="group" aria-label="Traffic light">
+      <div class="item" id="item1">
+        <button id="btn1" class="light red" type="button" aria-label="Red light" onclick="toggle(1)"></button>
         <div id="in1" class="input-area">
-            <input type="text" placeholder="Jazıń...">
-            <button class="send-btn" onclick="remove(1)">Jiberiw</button>
+          <label for="note1">Red light note</label>
+          <input id="note1" type="text" maxlength="120" placeholder="Write a note">
+          <button class="send-btn" type="button" onclick="remove(1)">Save</button>
         </div>
-    </div>
-
-    <div id="item2">
-        <button id="btn2" class="btn yellow" onclick="toggle(2)"></button>
+      </div>
+      <div class="item" id="item2">
+        <button id="btn2" class="light yellow" type="button" aria-label="Yellow light" onclick="toggle(2)"></button>
         <div id="in2" class="input-area">
-            <input type="text" placeholder="Jazıń...">
-            <button class="send-btn" onclick="remove(2)">Jiberiw</button>
+          <label for="note2">Yellow light note</label>
+          <input id="note2" type="text" maxlength="120" placeholder="Write a note">
+          <button class="send-btn" type="button" onclick="remove(2)">Save</button>
         </div>
-    </div>
-
-    <div id="item3">
-        <button id="btn3" class="btn green" onclick="toggle(3)"></button>
+      </div>
+      <div class="item" id="item3">
+        <button id="btn3" class="light green" type="button" aria-label="Green light" onclick="toggle(3)"></button>
         <div id="in3" class="input-area">
-            <input type="text" placeholder="Jazıń...">
-            <button class="send-btn" onclick="remove(3)">Jiberiw</button>
+          <label for="note3">Green light note</label>
+          <input id="note3" type="text" maxlength="120" placeholder="Write a note">
+          <button class="send-btn" type="button" onclick="remove(3)">Save</button>
         </div>
+      </div>
     </div>
-</div>
-
-<script>
+  </main>
+  <script>
     function toggle(id) {
-        document.getElementById('btn' + id).style.display = 'none';
-        document.getElementById('in' + id).style.display = 'flex';
+      document.getElementById("btn" + id).hidden = true;
+      document.getElementById("in" + id).style.display = "grid";
+      document.getElementById("status").textContent = "Add a short note, then save it.";
+      document.getElementById("note" + id).focus();
     }
-    function remove(id) {
-        document.getElementById('item' + id).style.display = 'none';
-    }
-</script>
 
+    function remove(id) {
+      const field = document.getElementById("note" + id);
+      if (!field.value.trim()) {
+        field.focus();
+        document.getElementById("status").textContent = "Write a note before saving.";
+        return;
+      }
+      document.getElementById("item" + id).hidden = true;
+      document.getElementById("status").textContent = "Note saved for this demonstration.";
+    }
+  </script>
 </body>
 </html>
